@@ -46,19 +46,19 @@ class Include{
     }
     return _where
   }
-  parseInclude(include){
+  parseInclude(include, associations){
     if(!include){ return }
     const self = this
     const _include = []
     for (const inc of include) {
-      const model = self.associations[inc.model]?.target
+      const model = associations[inc.model]?.target
       if(model){
         inc.model = model
         if(inc.where){
           inc.where = self.parseWhere(inc.where)
         }
         if(inc.include){
-          inc.include = self.parseInclude(include.include)
+          inc.include = self.parseInclude(inc.include, model.associations)
         }
         _include.push(inc)
       }
@@ -75,7 +75,8 @@ class Include{
   
       filter.where = self.parseWhere(filter?.where)
       
-      filter.include = self.parseInclude(filter?.include)
+      filter.include = self.parseInclude(filter?.include, self.associations)
+      
       const total = await self.klass.count({...filter,distinct: true})
       
       const results = await self.klass.findAll({
