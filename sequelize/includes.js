@@ -1,4 +1,5 @@
-const { isPlainObject } = require('lodash')
+const { isPlainObject, isArray } = require('lodash')
+
 class Include{
   constructor(Op, klass){
     this.Op = Op
@@ -46,6 +47,30 @@ class Include{
     }
     return _where
   }
+  
+  parseOrder(orders, associations){
+    if(!orders){ return orders }
+    const _orderModels = []    
+    for (const item of orders) {
+      const [first, ...rest] = item
+      if(isArray(first)){
+        const parsedItem = []
+        let _associations = associations;
+        for (const _item of first) {
+          const model = _associations[_item];
+          if(model){
+            _associations = model.target.associations
+            parsedItem.push(model)
+          }
+        }
+        _orderModels.push(parsedItem.concat(rest))
+      }else{
+        _orderModels.push(item)
+      }
+    }
+    return _orderModels
+  }
+  
   parseInclude(include, associations){
     if(!include){ return }
     const self = this
@@ -71,8 +96,9 @@ class Include{
       if(typeof filter == "string"){
         filter = JSON.parse(filter||"{}")
       }
-      const { limit, offset, order=[['id', 'DESC']] } = filter
-  
+      const { limit, offset } = filter
+
+      filter.order = self.parseOrder(filter.order, self.associations)
       filter.where = self.parseWhere(filter?.where)
       
       filter.include = self.parseInclude(filter?.include, self.associations)
@@ -83,8 +109,7 @@ class Include{
         ...filter,
         subQuery: false,
         limit,
-        offset,
-        order
+        offset
       })
   
       return {
@@ -97,7 +122,6 @@ class Include{
 
     }
   }
-
   static addCustomInclude(Op, klass){
     const self = new this(Op, klass)
     self.klass.findWithInclude = self.findWithInclude()
