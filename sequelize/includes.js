@@ -90,6 +90,7 @@ class Include{
     }
     return _include
   }
+
   findWithInclude(){
     const self = this;
     return async (filter) =>{
@@ -122,11 +123,25 @@ class Include{
 
     }
   }
+
+  findByIdWithInclude(){
+    const self = this;
+    return async (id, filter={})=>{
+      if(typeof filter == "string"){
+        filter = JSON.parse(filter||"{}")
+      }
+      filter.include = self.parseInclude(filter?.include, self.associations)
+      return await this.klass.findByPk(id, filter)
+    }
+  }
+
   static addCustomInclude(Op, klass){
     const self = new this(Op, klass)
     self.klass.findWithInclude = self.findWithInclude()
+    self.klass.findByIdWithInclude = self.findByIdWithInclude()
     return self
   }
+  
 }
 
 module.exports = Include
