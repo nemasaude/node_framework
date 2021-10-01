@@ -126,14 +126,18 @@ class Include{
 
   findByIdWithInclude(){
     const self = this;
-    return async (id, filter={})=>{
+    return async (id, filter={}, scope=null)=>{
       if(typeof filter == "string"){
         filter = JSON.parse(filter||"{}")
       }
       filter.include = self.parseInclude(filter?.include, self.associations)
+      if(scope){
+        return await this.klass.scope(scope).findByPk(id, filter)
+      }
       return await this.klass.findByPk(id, filter)
     }
   }
+
 
   static addCustomInclude(Op, klass){
     const self = new this(Op, klass)
