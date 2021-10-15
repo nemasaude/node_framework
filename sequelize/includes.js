@@ -30,11 +30,11 @@ class Include{
                 _where[key] = { [this.Op.in]: value.in };
               }
             }else if(value.hasOwnProperty('ne')){
-              if (value.in) {
+              if (value.ne) {
                 _where[key] = { [this.Op.ne]: value.ne };
               }
             }else if(value.hasOwnProperty('or')){
-              if (value.in) {
+              if (value.or) {
                 _where[key] = { [this.Op.or]: value.or };
               }
             }else {
