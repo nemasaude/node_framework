@@ -98,13 +98,17 @@ class Include{
         filter = JSON.parse(filter||"{}")
       }
       const { limit, offset } = filter
-
-      filter.order = self.parseOrder(filter.order, self.associations)
-      filter.where = self.parseWhere(filter?.where)
+      if(filter?.order){
+        filter.order = self.parseOrder(filter?.order, self.associations)
+      }
+      if(filter?.where){
+        filter.where = self.parseWhere(filter?.where)
+      }
+      if(filter?.include){
+        filter.include = self.parseInclude(filter?.include, self.associations)
+      }
       
-      filter.include = self.parseInclude(filter?.include, self.associations)
-      
-      const total = await self.klass.count({...filter,distinct: true})
+      const total = await self.klass.count({ ...filter ,distinct: true })
       
       const results = await self.klass.findAll({
         ...filter,
