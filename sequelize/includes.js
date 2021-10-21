@@ -37,6 +37,26 @@ class Include{
               if (value.or) {
                 _where[key] = { [this.Op.or]: value.or };
               }
+            }else if(value.hasOwnProperty('gt')){
+              if (value.gt) {
+                _where[key] = { [this.Op.gt]: value.gt };
+              }
+            }else if(value.hasOwnProperty('gte')){
+              if (value.gte) {
+                _where[key] = { [this.Op.gte]: value.gte };
+              }
+            }else if(value.hasOwnProperty('lt')){
+              if (value.lt) {
+                _where[key] = { [this.Op.lt]: value.lt };
+              }
+            }else if(value.hasOwnProperty('lte')){
+              if (value.lte) {
+                _where[key] = { [this.Op.lte]: value.lte };
+              }
+            }else if(value.hasOwnProperty('lte')){
+              if (value.lte) {
+                _where[key] = { [this.Op.lte]: value.lte };
+              }
             }else {
               _where[key] = value;
             }
