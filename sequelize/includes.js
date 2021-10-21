@@ -57,7 +57,16 @@ class Include{
               if (value.lte) {
                 _where[key] = { [this.Op.lte]: value.lte };
               }
-            }else {
+            }else if(value.hasOwnProperty('between')){
+              if (value.between) {
+                _where[key] = { [this.Op.between]: value.between };
+              }
+            }else if(value.hasOwnProperty('notBetween')){
+              if (value.notBetween) {
+                _where[key] = { [this.Op.notBetween]: value.notBetween };
+              }
+            }
+            else {
               _where[key] = value;
             }
           } else {
