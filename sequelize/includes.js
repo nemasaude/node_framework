@@ -65,6 +65,10 @@ class Include{
               if (value.notBetween) {
                 _where[key] = { [this.Op.notBetween]: value.notBetween };
               }
+            }else if(value.hasOwnProperty('notIn')){
+              if (value.notIn) {
+                _where[key] = { [this.Op.notIn]: value.notIn };
+              }
             }
             else {
               _where[key] = value;
