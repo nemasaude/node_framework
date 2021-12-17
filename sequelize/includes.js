@@ -1,5 +1,5 @@
 const { isPlainObject, isArray } = require('lodash')
-
+const Sequelize = require("sequelize")
 class Include{
   constructor(Op, klass){
     this.Op = Op
@@ -53,10 +53,6 @@ class Include{
               if (value.lte) {
                 _where[key] = { [this.Op.lte]: value.lte };
               }
-            }else if(value.hasOwnProperty('lte')){
-              if (value.lte) {
-                _where[key] = { [this.Op.lte]: value.lte };
-              }
             }else if(value.hasOwnProperty('between')){
               if (value.between) {
                 _where[key] = { [this.Op.between]: value.between };
@@ -85,21 +81,25 @@ class Include{
     if(!orders){ return orders }
     const _orderModels = []    
     for (const item of orders) {
-      const [first, ...rest] = item
-      if(isArray(first)){
-        const parsedItem = []
-        let _associations = associations;
-        for (const _item of first) {
-          const model = _associations[_item];
-          if(model){
-            _associations = model.target.associations
-            parsedItem.push(model)
-          }
-        }
-        _orderModels.push(parsedItem.concat(rest))
-      }else{
-        _orderModels.push(item)
-      }
+      let [column, direction] = item;
+      column = Sequelize.literal("`"+column.replace(/\s/g, "")+"`");
+      
+      _orderModels.push([column, direction]);
+      // const [first, ...rest] = item
+      // if(isArray(first)){
+      //   const parsedItem = []
+      //   let _associations = associations;
+      //   for (const _item of first) {
+      //     const model = _associations[_item];
+      //     if(model){
+      //       _associations = model.target.associations
+      //       parsedItem.push(model)
+      //     }
+      //   }
+      //   _orderModels.push(parsedItem.concat(rest))
+      // }else{
+      //   _orderModels.push(item)
+      // }
     }
     return _orderModels
   }
