@@ -109,7 +109,7 @@ class Include{
     const self = this
     const _include = []
     for (const inc of include) {
-      const model = associations[inc.model]?.target
+      const model = associations[inc.as ?? inc.model]?.target
       if(model){
         inc.model = model
         if(inc.where){
