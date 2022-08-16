@@ -65,6 +65,14 @@ class Include{
               if (value.notIn) {
                 _where[key] = { [this.Op.notIn]: value.notIn };
               }
+            }else if(value.hasOwnProperty('is')){
+              if (value.is) {
+                _where[key] = { [this.Op.is]: value.is };
+              }
+            }else if(value.hasOwnProperty('not')){
+              if (value.not) {
+                _where[key] = { [this.Op.not]: value.not };
+              }
             }
             else {
               _where[key] = value;
