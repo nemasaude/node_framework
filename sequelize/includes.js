@@ -134,7 +134,7 @@ class Include{
 
   findWithInclude(){
     const self = this;
-    return async (filter) =>{
+    return async (filter, subQuery) =>{
       if(typeof filter == "string"){
         filter = JSON.parse(filter||"{}")
       }
@@ -153,6 +153,7 @@ class Include{
       
       const results = await self.klass.findAll({
         ...filter,
+        subQuery,
         // subQuery: limit ? true : false,
         limit,
         offset
