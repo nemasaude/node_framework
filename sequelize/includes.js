@@ -184,13 +184,21 @@ class Include{
     }
   }
 
+  customParseWhere(){
+    const self = this;
+    return (where) =>{
+      return self.parseWhere(where)
+    }
+  }
 
   static addCustomInclude(Op, klass){
     const self = new this(Op, klass)
-    self.klass.findWithInclude = self.findWithInclude()
-    self.klass.findByIdWithInclude = self.findByIdWithInclude()
+    self.klass.findWithInclude = self.findWithInclude();
+    self.klass.findByIdWithInclude = self.findByIdWithInclude();
+    self.klass.parseWhere = self.customParseWhere();
     return self
   }
+  
   
 }
 
