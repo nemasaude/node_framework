@@ -148,9 +148,13 @@ class Include{
       if(filter?.include){
         filter.include = self.parseInclude(filter?.include, self.associations)
       }
-      
-      const total = await self.klass.count({ ...filter ,distinct: true })
-      
+
+      let total = 0
+
+      if(limit){
+        total = await self.klass.count({ ...filter, distinct: true })
+      }
+
       const results = await self.klass.findAll({
         ...filter,
         subQuery,
