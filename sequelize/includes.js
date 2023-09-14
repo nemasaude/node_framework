@@ -73,6 +73,10 @@ class Include{
               if (value.not !== undefined) {
                 _where[key] = { [this.Op.not]: value.not };
               }
+            }else if(value.hasOwnProperty('any')){
+              if (value.any !== undefined) {
+                _where[key] = { [this.Op.any]: value.any };
+              }
             }
             else {
               _where[key] = value;
